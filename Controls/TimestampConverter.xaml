@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="TripleDevBox.Controls.TimestampConverter"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Border Style="{StaticResource ToolCardStyle}">
+        <StackPanel Spacing="10">
+            <TextBlock Text="Unix Timestamp Converter" Style="{StaticResource ToolHeaderTextStyle}" />
+
+            <!-- Epoch value -->
+            <TextBlock Text="Epoch value" Style="{StaticResource FieldLabelStyle}" />
+            <Grid ColumnSpacing="8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox x:Name="EpochBox"
+                         Grid.Column="0"
+                         PlaceholderText="e.g. 1751760000"
+                         FontFamily="Consolas"
+                         TextChanged="EpochBox_TextChanged" />
+
+                <ComboBox x:Name="UnitCombo"
+                          Grid.Column="1"
+                          MinWidth="140"
+                          SelectionChanged="UnitCombo_SelectionChanged"
+                          ToolTipService.ToolTip="How to interpret the epoch value">
+                    <ComboBoxItem Content="Auto-detect" IsSelected="True" />
+                    <ComboBoxItem Content="Seconds" />
+                    <ComboBoxItem Content="Milliseconds" />
+                </ComboBox>
+
+                <Button x:Name="NowButton"
+                        Grid.Column="2"
+                        Content="Now"
+                        Click="NowButton_Click" />
+            </Grid>
+            <TextBlock x:Name="DetectedText" Style="{StaticResource FieldLabelStyle}" Text="" />
+
+            <!-- Human-readable input -->
+            <Grid ColumnSpacing="8" Margin="0,6,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0"
+                           Text="Human-readable datetime"
+                           VerticalAlignment="Center"
+                           Style="{StaticResource FieldLabelStyle}" />
+                <ComboBox x:Name="ZoneCombo"
+                          Grid.Column="1"
+                          MinWidth="110"
+                          SelectionChanged="ZoneCombo_SelectionChanged"
+                          ToolTipService.ToolTip="Time zone used to read / write the field below">
+                    <ComboBoxItem Content="Local" IsSelected="True" />
+                    <ComboBoxItem Content="UTC" />
+                </ComboBox>
+            </Grid>
+            <TextBox x:Name="HumanBox"
+                     PlaceholderText="yyyy-MM-dd HH:mm:ss"
+                     FontFamily="Consolas"
+                     TextChanged="HumanBox_TextChanged" />
+
+            <!-- Parse error -->
+            <TextBlock x:Name="ErrorText"
+                       Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                       TextWrapping="Wrap"
+                       Visibility="Collapsed" />
+
+            <!-- Read-only results: both UTC and local -->
+            <Border Background="{ThemeResource SubtleFillColorSecondaryBrush}"
+                    CornerRadius="6"
+                    Padding="12"
+                    Margin="0,4,0,0">
+                <Grid RowSpacing="6" ColumnSpacing="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="UTC" FontWeight="SemiBold" />
+                    <TextBlock x:Name="UtcText" Grid.Row="0" Grid.Column="1"
+                               IsTextSelectionEnabled="True" TextWrapping="Wrap" Text="—" />
+
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Local" FontWeight="SemiBold" />
+                    <TextBlock x:Name="LocalText" Grid.Row="1" Grid.Column="1"
+                               IsTextSelectionEnabled="True" TextWrapping="Wrap" Text="—" />
+
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="ISO 8601" FontWeight="SemiBold" />
+                    <TextBlock x:Name="IsoText" Grid.Row="2" Grid.Column="1"
+                               IsTextSelectionEnabled="True" TextWrapping="Wrap"
+                               FontFamily="Consolas" Text="—" />
+
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Relative" FontWeight="SemiBold" />
+                    <TextBlock x:Name="RelativeText" Grid.Row="3" Grid.Column="1"
+                               IsTextSelectionEnabled="True" TextWrapping="Wrap" Text="—" />
+                </Grid>
+            </Border>
+        </StackPanel>
+    </Border>
+</UserControl>

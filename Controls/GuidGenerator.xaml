@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="TripleDevBox.Controls.GuidGenerator"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Border Style="{StaticResource ToolCardStyle}">
+        <Grid RowSpacing="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Text="GUID Generator" Style="{StaticResource ToolHeaderTextStyle}" />
+
+            <!-- Format toggles -->
+            <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="18">
+                <CheckBox x:Name="UppercaseToggle" Content="Uppercase" Checked="Toggle_Changed" Unchecked="Toggle_Changed" />
+                <CheckBox x:Name="BracesToggle" Content="Braces" Checked="Toggle_Changed" Unchecked="Toggle_Changed" />
+                <CheckBox x:Name="HyphensToggle" Content="Hyphens" IsChecked="True" Checked="Toggle_Changed" Unchecked="Toggle_Changed" />
+            </StackPanel>
+
+            <!-- Live preview of the current format -->
+            <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="8">
+                <TextBlock Text="Preview:" Style="{StaticResource FieldLabelStyle}" VerticalAlignment="Center" />
+                <TextBlock x:Name="PreviewText" FontFamily="Consolas"
+                           IsTextSelectionEnabled="True" VerticalAlignment="Center" />
+            </StackPanel>
+
+            <!-- Count + generate -->
+            <Grid Grid.Row="3" ColumnSpacing="8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <NumberBox x:Name="CountBox"
+                           Grid.Column="0"
+                           Header="Count"
+                           Value="1"
+                           Minimum="1"
+                           Maximum="100000"
+                           SmallChange="1"
+                           LargeChange="10"
+                           SpinButtonPlacementMode="Compact"
+                           MinWidth="130" />
+                <Button x:Name="GenerateButton"
+                        Grid.Column="1"
+                        Content="Generate"
+                        Style="{StaticResource AccentButtonStyle}"
+                        VerticalAlignment="Bottom"
+                        Click="GenerateButton_Click" />
+            </Grid>
+
+            <!-- Output actions -->
+            <StackPanel Grid.Row="4" Orientation="Horizontal" Spacing="8">
+                <Button x:Name="CopyButton" Content="Copy" Click="CopyButton_Click" />
+                <Button x:Name="ClearButton" Content="Clear" Click="ClearButton_Click" />
+                <TextBlock x:Name="StatusText" VerticalAlignment="Center"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+
+            <!-- Output -->
+            <TextBox x:Name="OutputBox"
+                     Grid.Row="5"
+                     IsReadOnly="True"
+                     AcceptsReturn="True"
+                     TextWrapping="NoWrap"
+                     FontFamily="Consolas"
+                     MinHeight="120"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto"
+                     ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                     PlaceholderText="Generated GUIDs appear here, one per line." />
+        </Grid>
+    </Border>
+</UserControl>

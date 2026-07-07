@@ -1,0 +1,64 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
+    <RootNamespace>TripleDevBox</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\AppIcon.ico</ApplicationIcon>
+    <Platforms>x64</Platforms>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+
+    <!-- WinUI 3 / Windows App SDK -->
+    <UseWinUI>true</UseWinUI>
+    <EnableMsixTooling>true</EnableMsixTooling>
+
+    <!-- Unpackaged (no MSIX). The build auto-injects the Windows App SDK
+         bootstrap initializer when WindowsPackageType == None. -->
+    <WindowsPackageType>None</WindowsPackageType>
+
+    <!-- Bundle the Windows App SDK runtime next to the .exe so the app runs
+         without depending on a machine-installed framework package. -->
+    <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+
+    <!-- Framework-dependent for fast local builds; a self-contained publish
+         (the VS profile or publish.ps1) overrides this to bundle the .NET
+         runtime too, producing a folder that runs with no prerequisites. -->
+    <SelfContained Condition="'$(SelfContained)' == ''">false</SelfContained>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260529003" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.8249" />
+  </ItemGroup>
+
+  <!-- Ship the .ico next to the .exe so AppWindow.SetIcon can load it at
+       runtime for the window title bar and taskbar. -->
+  <ItemGroup>
+    <Content Include="Assets\AppIcon.ico" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <!-- On publish, drop Windows App SDK components this app never uses (Windows
+       ML / DirectML / NPU detection) and the non-English WinUI system-string
+       satellites. Saves ~42 MB and ~170 files. Runs after the publish output
+       is fully assembled; also applies from the Visual Studio Publish button. -->
+  <Target Name="TrimUnusedWindowsAppSdkComponents" AfterTargets="Publish">
+    <ItemGroup>
+      <_TdbTrimFiles Include="$(PublishDir)onnxruntime.dll" />
+      <_TdbTrimFiles Include="$(PublishDir)DirectML.dll" />
+      <_TdbMuiFiles Include="$(PublishDir)**\*.mui" Exclude="$(PublishDir)en-us\**\*.mui" />
+      <_TdbMuiDirs Include="@(_TdbMuiFiles->'%(RootDir)%(Directory)')" />
+    </ItemGroup>
+    <Delete Files="@(_TdbTrimFiles)" />
+    <Delete Files="@(_TdbMuiFiles)" />
+    <RemoveDir Directories="@(_TdbMuiDirs->Distinct())" />
+    <RemoveDir Directories="$(PublishDir)NpuDetect" />
+    <Message Importance="high"
+             Text="Trimmed unused Windows App SDK components (Windows ML / DirectML / NPU / non-English satellites) from $(PublishDir)" />
+  </Target>
+
+</Project>
