@@ -6,6 +6,8 @@ A single-window **WinUI 3** desktop app (Windows App SDK, unpackaged, **.NET 10*
 - **GUID Generator** (right) — generates v4 GUIDs with **Uppercase / Braces / Hyphens** toggles (defaults produce `7076b156-8dfb-4092-b60a-8e6b1e7f900f`), a count field to make N at once, a live format preview, and copy.
 - **JSON Escape / Unescape** (bottom) — escapes/unescapes JSON string content, mirroring the freeformatter.com behavior.
 
+![TripleDevBox — a single WinUI 3 window with the Unix timestamp converter, GUID generator, and JSON escape/unescape tools](docs/screenshot.jpg)
+
 ## Requirements
 
 - Windows 10 version 2004 (build 19041) or later, x64
